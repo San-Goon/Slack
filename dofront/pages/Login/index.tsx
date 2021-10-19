@@ -18,8 +18,8 @@ const LogIn = () => {
       setLoginError(false);
       axios
         .post('/api/users/login', { email, password }, { withCredentials: true })
-        .then(() => {
-          mutate();
+        .then((response) => {
+          mutate(response.data);
         })
         .catch((error) => {
           setLoginError(error.response?.data?.statusCode === 401);
@@ -28,6 +28,10 @@ const LogIn = () => {
     },
     [email, password],
   );
+
+  if (data === undefined) {
+    return <div>로딩중...</div>;
+  }
 
   if (data) {
     return <Redirect to="/workspace/channel" />;

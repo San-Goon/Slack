@@ -1,6 +1,7 @@
 import fetcher from '@utils/fetcher';
 import axios from 'axios';
 import React, { FC, useCallback } from 'react';
+import { Redirect } from 'react-router';
 import useSWR from 'swr';
 
 const Workspace: FC = ({ children }) => {
@@ -12,9 +13,13 @@ const Workspace: FC = ({ children }) => {
         withCredentials: true,
       })
       .then(() => {
-        mutate();
+        mutate(false);
       });
   }, []);
+
+  if (!data) {
+    return <Redirect to="/login" />;
+  }
 
   return (
     <div>
