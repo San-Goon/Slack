@@ -19,7 +19,7 @@ const LogIn = () => {
       axios
         .post('/api/users/login', { email, password }, { withCredentials: true })
         .then((response) => {
-          mutate(response.data);
+          mutate(response.data, false);
         })
         .catch((error) => {
           setLoginError(error.response?.data?.statusCode === 401);
@@ -34,7 +34,7 @@ const LogIn = () => {
   }
 
   if (data) {
-    return <Redirect to="/workspace/channel" />;
+    return <Redirect to="/workspace/sleact/channel/일반" />;
   }
 
   //  console.log(error,userData)
