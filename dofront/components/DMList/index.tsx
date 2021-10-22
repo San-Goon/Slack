@@ -1,3 +1,4 @@
+import useSocket from '@hooks/useSocket';
 import { IDM, IUser, IUserWithOnline } from '@typings/db';
 import fetcher from '@utils/fetcher';
 import React, { FC, useCallback, useEffect, useState } from 'react';
@@ -18,6 +19,7 @@ const DMList: FC = () => {
   const [channelCollapse, setChannelCollapse] = useState(false);
   const [countList, setCountList] = useState<{ [key: string]: number }>({});
   const [onlineList, setOnlineList] = useState<number[]>([]);
+  const [socket] = useSocket(workspace);
 
   const toggleChannelCollapse = useCallback(() => {
     setChannelCollapse((prev) => !prev);
@@ -49,6 +51,19 @@ const DMList: FC = () => {
     setOnlineList([]);
     setCountList({});
   }, [workspace]);
+
+  useEffect(() => {
+    socket?.on('onlineList', (data: number[]) => {
+      setOnlineList(data);
+    });
+    socket?.on('dm', onMessage);
+    console.log('socket on dm', socket?.hasListeners('dm'), socket);
+    return () => {
+      socket?.off('dm', onMessage);
+      console.log('socket off dm', socket?.hasListeners('dm'));
+      socket?.off('onlineList');
+    };
+  }, [socket]);
 
   return (
     <>

@@ -44,7 +44,7 @@ const InviteChannelModal: VFC<Props> = ({ show, onCloseModal, setShowInviteChann
           toast.error(error.response?.data, { position: 'bottom-center' });
         });
     },
-    [newMember],
+    [newMember, workspace, channel],
   );
   return (
     <Modal show={show} onCloseModal={onCloseModal}>

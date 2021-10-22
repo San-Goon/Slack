@@ -1,6 +1,6 @@
 import fetcher from '@utils/fetcher';
 import axios from 'axios';
-import React, { useCallback, useState, VFC } from 'react';
+import React, { useCallback, useEffect, useState, VFC } from 'react';
 import { Redirect, Route, Switch, useParams } from 'react-router';
 import useSWR from 'swr';
 import {
@@ -34,6 +34,7 @@ import InviteWorkspacemodal from '@components/InviteWorkspaceModal';
 import InviteChannelmodal from '@components/InviteChannelModal';
 import DMList from '@components/DMList';
 import ChannelList from '@components/ChannelList';
+import useSocket from '@hooks/useSocket';
 
 const Channel = loadable(() => import('@pages/Channel'));
 const DirectMessage = loadable(() => import('@pages/DirectMessage'));
@@ -56,6 +57,19 @@ const Workspace: VFC = () => {
     userData ? `/api/workspaces/${workspace}/channels/${channel}/members` : null,
     fetcher,
   );
+  const [socket, disconnect] = useSocket(workspace);
+
+  useEffect(() => {
+    if (ChannelData && userData && socket) {
+      socket.emit('login', { id: userData.id, channels: ChannelData.map((v) => v.id) });
+    }
+  }, [socket, ChannelData, userData]);
+
+  useEffect(() => {
+    return () => {
+      disconnect();
+    };
+  }, [workspace, disconnect]);
 
   const onLogout = useCallback(() => {
     axios
@@ -159,7 +173,7 @@ const Workspace: VFC = () => {
         <Workspaces>
           {userData?.Workspaces.map((ws) => {
             return (
-              <Link key={ws.id} to={`/workspace/${123}/channel/일반`}>
+              <Link key={ws.id} to={`/workspace/${ws.url}/channel/일반`}>
                 <WorkspaceButton>{ws.name.slice(0, 1).toUpperCase()}</WorkspaceButton>
               </Link>
             );
