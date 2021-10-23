@@ -6,11 +6,11 @@ import dayjs from 'dayjs';
 import regexifyString from 'regexify-string';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
+import { backUrl } from '@utils/config';
 
 interface Props {
   data: IDM | IChat;
 }
-const BACK_URL = 'http://localhost:3095';
 const Chat: VFC<Props> = ({ data }) => {
   const { workspace } = useParams<{ workspace: string }>();
   const user = 'Sender' in data ? data.Sender : data.User;
@@ -18,7 +18,7 @@ const Chat: VFC<Props> = ({ data }) => {
   const result = useMemo(
     () =>
       data.content.startsWith('uploads\\') ? (
-        <img src={`${BACK_URL}/${data.content}`} style={{ maxHeight: 200 }} />
+        <img src={`${backUrl}/${data.content}`} style={{ maxHeight: 200 }} />
       ) : (
         regexifyString({
           input: data.content,
