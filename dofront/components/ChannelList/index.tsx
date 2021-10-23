@@ -2,34 +2,21 @@ import { CollapseButton } from '@components/DMList/style';
 import { IChannel, IUser } from '@typings/db';
 import fetcher from '@utils/fetcher';
 import React, { FC, useCallback, useState } from 'react';
-import { useLocation, useParams } from 'react-router';
+import { useParams } from 'react-router';
 import useSWR from 'swr';
-import { NavLink } from 'react-router-dom';
+import EachChannel from '@components/EachChannel';
 
 const ChannelList: FC = () => {
   const { workspace } = useParams<{ workspace?: string }>();
-  const location = useLocation();
-  const { data: userData, error, mutate } = useSWR<IUser>('/api/users', fetcher, { dedupingInterval: 2000 });
+  const { data: userData } = useSWR<IUser>('/api/users', fetcher, { dedupingInterval: 2000 });
   const { data: ChannelData } = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);
 
   const [channelCollapse, setChannelCollapse] = useState(false);
-  const [countList, setCountList] = useState<{ [key: string]: number | undefined }>({});
 
   const toggleChannelCollapse = useCallback(() => {
     setChannelCollapse((prev) => !prev);
   }, []);
 
-  const resetCount = useCallback(
-    (id) => () => {
-      setCountList((list) => {
-        return {
-          ...list,
-          [id]: undefined,
-        };
-      });
-    },
-    [],
-  );
   return (
     <>
       <h2>
@@ -45,15 +32,7 @@ const ChannelList: FC = () => {
       <div>
         {!channelCollapse &&
           ChannelData?.map((channel) => {
-            return (
-              <NavLink
-                key={channel.name}
-                activeClassName="selected"
-                to={`/workspace/${workspace}/channel/${channel.name}`}
-              >
-                <span># {channel.name}</span>
-              </NavLink>
-            );
+            return <EachChannel key={channel.id} channel={channel} />;
           })}
       </div>
     </>

@@ -23,7 +23,6 @@ const InviteChannelModal: VFC<Props> = ({ show, onCloseModal, setShowInviteChann
     userData ? `/api/workspaces/${workspace}/channels/${channel}/members` : null,
     fetcher,
   );
-
   const onInviteMember = useCallback(
     (e) => {
       e.preventDefault();

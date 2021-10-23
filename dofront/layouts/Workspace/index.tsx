@@ -31,7 +31,6 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import CreateChannelModal from '@components/CreateChannelModal';
 import InviteWorkspacemodal from '@components/InviteWorkspaceModal';
-import InviteChannelmodal from '@components/InviteChannelModal';
 import DMList from '@components/DMList';
 import ChannelList from '@components/ChannelList';
 import useSocket from '@hooks/useSocket';
@@ -47,16 +46,11 @@ const Workspace: VFC = () => {
   const [showWorkspaceModal, setShowWorkspaceModal] = useState(false);
   const [showCreateChannelModal, setShowCreateChannelModal] = useState(false);
   const [showInviteWorkspaceModal, setShowInviteWorkspaceModal] = useState(false);
-  const [showInviteChannelModal, setShowInviteChannelModal] = useState(false);
 
-  const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
+  const { workspace } = useParams<{ workspace: string }>();
 
-  const { data: userData, error, mutate } = useSWR<IUser | false>('/api/users', fetcher, { dedupingInterval: 2000 });
+  const { data: userData, mutate } = useSWR<IUser | false>('/api/users', fetcher, { dedupingInterval: 2000 });
   const { data: ChannelData } = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);
-  const { data: memberData } = useSWR<IUser[]>(
-    userData ? `/api/workspaces/${workspace}/channels/${channel}/members` : null,
-    fetcher,
-  );
   const [socket, disconnect] = useSocket(workspace);
 
   useEffect(() => {
@@ -64,12 +58,6 @@ const Workspace: VFC = () => {
       socket.emit('login', { id: userData.id, channels: ChannelData.map((v) => v.id) });
     }
   }, [socket, ChannelData, userData]);
-
-  useEffect(() => {
-    return () => {
-      disconnect();
-    };
-  }, [workspace, disconnect]);
 
   const onLogout = useCallback(() => {
     axios
@@ -127,16 +115,9 @@ const Workspace: VFC = () => {
   const onCloseModal = useCallback(() => {
     setShowCreateWorkspaceModal(false);
     setShowCreateChannelModal(false);
-    setShowInviteChannelModal(false);
     setShowInviteWorkspaceModal(false);
   }, []);
 
-  const toggleWorkspaceModal = useCallback(() => {
-    setShowWorkspaceModal((prev) => !prev);
-  }, []);
-  if (!userData) {
-    return <Redirect to="/login" />;
-  }
   const onClickAddChannel = useCallback(() => {
     setShowCreateChannelModal(true);
   }, []);
@@ -144,6 +125,19 @@ const Workspace: VFC = () => {
   const onClickInviteWorkspace = useCallback(() => {
     setShowInviteWorkspaceModal(true);
   }, []);
+
+  useEffect(() => {
+    return () => {
+      disconnect();
+    };
+  }, [workspace, disconnect]);
+
+  const toggleWorkspaceModal = useCallback(() => {
+    setShowWorkspaceModal((prev) => !prev);
+  }, []);
+  if (!userData) {
+    return <Redirect to="/login" />;
+  }
 
   return (
     <div>
@@ -157,7 +151,7 @@ const Workspace: VFC = () => {
             {showUserMenu && (
               <Menu style={{ right: 0, top: 38 }} show={showUserMenu} onCloseModal={onCloseUserProfile}>
                 <ProfileModal>
-                  <img src={gravatar.url(userData.nickname, { s: '36px', d: 'retro' })} alt={userData.nickname} />
+                  <img src={gravatar.url(userData.email, { s: '36px', d: 'retro' })} alt={userData.nickname} />
                   <div>
                     <span id="profile-name">{userData.nickname}</span>
                     <span id="profile-active">Active</span>
@@ -173,7 +167,7 @@ const Workspace: VFC = () => {
         <Workspaces>
           {userData?.Workspaces.map((ws) => {
             return (
-              <Link key={ws.id} to={`/workspace/${ws.url}/channel/일반`}>
+              <Link key={ws.id} to={`/workspace/${123}/channel/일반`}>
                 <WorkspaceButton>{ws.name.slice(0, 1).toUpperCase()}</WorkspaceButton>
               </Link>
             );
@@ -224,11 +218,6 @@ const Workspace: VFC = () => {
         show={showInviteWorkspaceModal}
         onCloseModal={onCloseModal}
         setShowInviteWorkspaceModal={setShowInviteWorkspaceModal}
-      />
-      <InviteChannelmodal
-        show={showInviteChannelModal}
-        onCloseModal={onCloseModal}
-        setShowInviteChannelModal={setShowInviteChannelModal}
       />
       <ToastContainer position="bottom-center" />
     </div>

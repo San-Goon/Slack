@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "cross-env TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack serve --env development",
-    "build": "cross-env TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack",
+    "build": "cross-env NODE_ENV=production TS_NODE_PROJECT=\"tsconfig-for-webpack-config.json\" webpack",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "kyle",
@@ -14,6 +14,7 @@
     "@emotion/babel-plugin": "^11.3.0",
     "@emotion/react": "^11.4.1",
     "@emotion/styled": "^11.3.0",
+    "@jjordy/swr-devtools": "^2.2.0",
     "@loadable/component": "^5.15.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.1",
     "@types/gravatar": "^1.8.3",
@@ -40,7 +41,8 @@
     "style-loader": "^3.3.0",
     "swr": "^1.0.1",
     "ts-node": "^10.3.0",
-    "typescript": "^4.4.4"
+    "typescript": "^4.4.4",
+    "webpack-bundle-analyzer": "^4.5.0"
   },
   "devDependencies": {
     "@babel/core": "^7.15.8",
@@ -56,6 +58,7 @@
     "@types/react-router-dom": "^5.3.1",
     "@types/socket.io-client": "^1.4.35",
     "@types/webpack": "^5.28.0",
+    "@types/webpack-bundle-analyzer": "^4.4.1",
     "babel-loader": "^8.2.2",
     "eslint": "^8.0.1",
     "eslint-config-react-app": "^6.0.0",
