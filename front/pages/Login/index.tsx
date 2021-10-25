@@ -1,44 +1,46 @@
 import useInput from '@hooks/useInput';
-import axios from 'axios';
-import { Form, Label, Input, LinkContainer, Button, Header, Error, Success } from '@pages/SignUp/styles';
-import React, { useCallback, useState } from 'react';
-import { Link } from 'react-router-dom';
-import useSWR from 'swr';
+import { Button, Error, Form, Header, Input, Label, LinkContainer } from '@pages/SignUp/styles';
 import fetcher from '@utils/fetcher';
-import { Redirect } from 'react-router';
+import axios from 'axios';
+import React, { useCallback, useState } from 'react';
+import { Redirect } from 'react-router-dom';
+import useSWR from 'swr';
 
 const LogIn = () => {
-  const { data, error, mutate } = useSWR('/api/users', fetcher);
-  const [loginError, setLoginError] = useState(false);
+  const { data: userData, error, mutate } = useSWR('/api/users', fetcher);
+  const [logInError, setLogInError] = useState(false);
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
   const onSubmit = useCallback(
     (e) => {
       e.preventDefault();
-      setLoginError(false);
+      setLogInError(false);
       axios
-        .post('/api/users/login', { email, password }, { withCredentials: true })
-        .then((response) => {
+        .post(
+          '/api/users/login',
+          { email, password },
+          {
+            withCredentials: true,
+          },
+        )
+        .then(() => {
           mutate();
         })
         .catch((error) => {
-          setLoginError(error.response?.data?.statusCode === 401);
-        })
-        .finally(() => {});
+          setLogInError(error.response?.data?.code === 401);
+        });
     },
-    [email, password],
+    [email, password, mutate],
   );
 
-  if (data === undefined) {
-    return <div>로딩중...</div>;
-  }
-
-  if (data) {
+  console.log(error, userData);
+  if (!error && userData) {
+    console.log('로그인됨', userData);
     return <Redirect to="/workspace/sleact/channel/일반" />;
   }
 
   return (
-    <div id="containter">
+    <div id="container">
       <Header>Sleact</Header>
       <Form onSubmit={onSubmit}>
         <Label id="email-label">
@@ -52,13 +54,13 @@ const LogIn = () => {
           <div>
             <Input type="password" id="password" name="password" value={password} onChange={onChangePassword} />
           </div>
-          {loginError && <Error>로그인 정보가 일치하지 않습니다.</Error>}
+          {logInError && <Error>이메일과 비밀번호 조합이 일치하지 않습니다.</Error>}
         </Label>
         <Button type="submit">로그인</Button>
       </Form>
       <LinkContainer>
         아직 회원이 아니신가요?&nbsp;
-        <Link to="/signup">회원가입 하러가기</Link>
+        <a href="/signup">회원가입 하러가기</a>
       </LinkContainer>
     </div>
   );
