@@ -3,7 +3,7 @@ import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import webpack, { Configuration as WebpackConfiguration } from 'webpack';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import { backUrl } from '@utils/config';
+import { backUrl } from './utils/config';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
