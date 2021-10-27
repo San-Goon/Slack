@@ -10,7 +10,7 @@ import { CollapseButton } from './style';
 
 const DMList: FC = () => {
   const { workspace } = useParams<{ workspace: string }>();
-  const { data: userData } = useSWR<IUser>('/api/users', fetcher, { dedupingInterval: 2000 });
+  const { data: userData } = useSWR<IUser>(`/api/users`, fetcher, { dedupingInterval: 2000 });
 
   const { data: memberData } = useSWR<IUserWithOnline[]>(
     userData ? `/api/workspaces/${workspace}/members` : null,
@@ -43,7 +43,7 @@ const DMList: FC = () => {
       <h2>
         <CollapseButton collapse={channelCollapse} onClick={toggleChannelCollapse}>
           <i
-            className="c-icon p-channel_sidebar__section_heading_expand p-channel-sidebar__section_heading_expand--show_more_feature c-icon--caret-right c-icon-inherit c-icon--inline"
+            className="c-icon p-channel_sidebar__section_heading_expand p-channel_sidebar__section_heading_expand--show_more_feature c-icon--caret-right c-icon-inherit c-icon--inline"
             data-qa="channel-section-collapse"
             aria-hidden="true"
           />

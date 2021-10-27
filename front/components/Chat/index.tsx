@@ -6,7 +6,6 @@ import dayjs from 'dayjs';
 import regexifyString from 'regexify-string';
 import { useParams } from 'react-router';
 import { Link } from 'react-router-dom';
-import { backUrl } from '@utils/config';
 
 interface Props {
   data: IDM | IChat;
@@ -18,7 +17,7 @@ const Chat: VFC<Props> = ({ data }) => {
   const result = useMemo(
     () =>
       data.content.startsWith('uploads\\') ? (
-        <img src={`${backUrl}/${data.content}`} style={{ maxHeight: 200 }} />
+        <img src={`http://localhost:3095/${data.content}`} style={{ maxHeight: 200 }} />
       ) : (
         regexifyString({
           input: data.content,

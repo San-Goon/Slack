@@ -18,11 +18,8 @@ interface Props {
 const InviteWorkspaceModal: VFC<Props> = ({ show, onCloseModal, setShowInviteWorkspaceModal }) => {
   const { workspace } = useParams<{ workspace: string }>();
   const [newMember, onChangeNewMember, setNewMember] = useInput('');
-  const { data: userData } = useSWR<IUser>('/api/users', fetcher);
-  const { mutate: memberMutate } = useSWR<IChannel[]>(
-    userData ? `/api/workspaces/${workspace}/members` : null,
-    fetcher,
-  );
+  const { data: userData } = useSWR<IUser>(`/api/users`, fetcher);
+  const { mutate: memberMutate } = useSWR<IUser[]>(userData ? `/api/workspaces/${workspace}/members` : null, fetcher);
 
   const onInviteMember = useCallback(
     (e) => {
@@ -44,7 +41,7 @@ const InviteWorkspaceModal: VFC<Props> = ({ show, onCloseModal, setShowInviteWor
           toast.error(error.response?.data, { position: 'bottom-center' });
         });
     },
-    [workspace, newMember],
+    [workspace, newMember, memberMutate, setShowInviteWorkspaceModal, setNewMember],
   );
   return (
     <Modal show={show} onCloseModal={onCloseModal}>

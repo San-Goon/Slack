@@ -3,8 +3,6 @@ import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 import webpack, { Configuration as WebpackConfiguration } from 'webpack';
 import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import { backUrl } from './utils/config';
-
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 const config: webpack.Configuration = {
@@ -80,7 +78,7 @@ const config: webpack.Configuration = {
     static: { directory: path.resolve(__dirname) },
     proxy: {
       '/api/': {
-        target: backUrl,
+        target: 'http://localhost:3095',
         changeOrigin: true,
       },
     },

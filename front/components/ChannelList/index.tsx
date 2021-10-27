@@ -8,7 +8,7 @@ import EachChannel from '@components/EachChannel';
 
 const ChannelList: FC = () => {
   const { workspace } = useParams<{ workspace?: string }>();
-  const { data: userData } = useSWR<IUser>('/api/users', fetcher, { dedupingInterval: 2000 });
+  const { data: userData } = useSWR<IUser>(`/api/users`, fetcher, { dedupingInterval: 2000 });
   const { data: ChannelData } = useSWR<IChannel[]>(userData ? `/api/workspaces/${workspace}/channels` : null, fetcher);
 
   const [channelCollapse, setChannelCollapse] = useState(false);

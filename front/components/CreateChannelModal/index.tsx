@@ -23,7 +23,7 @@ const CreateChannelModal: VFC<Props> = ({ show, onCloseModal, setShowCreateChann
     data: userData,
     error,
     mutate: userMutate,
-  } = useSWR<IUser | false>('/api/users', fetcher, { dedupingInterval: 2000 });
+  } = useSWR<IUser | false>(`/api/users`, fetcher, { dedupingInterval: 2000 });
   const { data: channelData, mutate: channelMutate } = useSWR<IChannel[]>(
     userData ? `/api/workspaces/${workspace}/channels` : null,
     fetcher,
@@ -49,7 +49,7 @@ const CreateChannelModal: VFC<Props> = ({ show, onCloseModal, setShowCreateChann
           toast.error(error.response?.data, { position: 'bottom-center' });
         });
     },
-    [newChannel, workspace],
+    [newChannel, workspace, channelMutate, setNewChannel, setShowCreateChannelModal],
   );
 
   return (

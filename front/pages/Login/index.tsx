@@ -7,7 +7,7 @@ import { Redirect } from 'react-router-dom';
 import useSWR from 'swr';
 
 const LogIn = () => {
-  const { data: userData, error, mutate } = useSWR('/api/users', fetcher);
+  const { data: userData, error, mutate } = useSWR(`/api/users`, fetcher);
   const [logInError, setLogInError] = useState(false);
   const [email, onChangeEmail] = useInput('');
   const [password, onChangePassword] = useInput('');
@@ -17,7 +17,7 @@ const LogIn = () => {
       setLogInError(false);
       axios
         .post(
-          '/api/users/login',
+          `/api/users/login`,
           { email, password },
           {
             withCredentials: true,

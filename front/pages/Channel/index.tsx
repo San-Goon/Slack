@@ -16,7 +16,7 @@ import Scrollbars from 'react-custom-scrollbars';
 
 const Channel = () => {
   const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
-  const { data: myData } = useSWR('/api/users', fetcher);
+  const { data: myData } = useSWR(`/api/users`, fetcher);
   const [chat, onChangeChat, setChat] = useInput('');
   const {
     data: chatData,

@@ -18,7 +18,7 @@ import { DragOver } from '@pages/Channel/styles';
 const DirectMessage = () => {
   const { workspace, id } = useParams<{ workspace: string; id: string }>();
   const { data: userData } = useSWR(`/api/workspaces/${workspace}/users/${id}`, fetcher);
-  const { data: myData } = useSWR('/api/users', fetcher);
+  const { data: myData } = useSWR(`/api/users`, fetcher);
   const [chat, onChangeChat, setChat] = useInput('');
   const [dragOver, setDragOver] = useState(false);
   const {

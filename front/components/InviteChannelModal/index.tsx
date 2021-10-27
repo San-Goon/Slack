@@ -18,7 +18,7 @@ interface Props {
 const InviteChannelModal: VFC<Props> = ({ show, onCloseModal, setShowInviteChannelModal }) => {
   const { workspace, channel } = useParams<{ workspace: string; channel: string }>();
   const [newMember, onChangeNewMember, setNewMember] = useInput('');
-  const { data: userData } = useSWR<IUser>('/api/users', fetcher);
+  const { data: userData } = useSWR<IUser>(`/api/users`, fetcher);
   const { mutate: memberMutate } = useSWR<IUser[]>(
     userData ? `/api/workspaces/${workspace}/channels/${channel}/members` : null,
     fetcher,
